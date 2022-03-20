@@ -1,3 +1,9 @@
+/// the usage of BSD cat
+/// cat [-belnstuv] [file ...]
+/// [ ] 1. impl -belnstuv
+/// [x] 2. accpet multiple file
+///
+/// -b Number the non-blank output lines, starting at 1.
 extern crate clap;
 use clap::{Arg, Command};
 
@@ -6,6 +12,7 @@ fn main() {
     let app = Command::new("cat")
         .about("Rust cat commandline app")
         .author("qinyuhangxiaoxiang@gmail.com")
+        .arg(Arg::new("line number").short('b').takes_value(false))
         .arg(
             Arg::new("file name")
                 .takes_value(true)
@@ -22,6 +29,13 @@ fn main() {
             Ok(r) => r,
             Err(e) => format!("cat: {}: {}", f, e.to_string()),
         };
-        print!("{}", x);
+        if m.is_present("line number") {
+            // if -b add line number to x
+            x.split("\n").enumerate().for_each(|(line, content)| {
+                println!("{} {}", line + 1, content);
+            });
+        } else {
+            print!("{}", x);
+        };
     });
 }
