@@ -43,17 +43,14 @@ fn test_cat_multiple_files() {
 #[test]
 fn test_cat_b_option() {
     let mut c = A_CMD::cargo_bin("cat").unwrap();
-    c.args(&["./tests/cli.rs", "-n"])
-    .assert()
-    .success()
-    .stdout(
+    c.args(&["./tests/cli.rs", "-n"]).assert().success().stdout(
         std::fs::read_to_string("./tests/cli.rs")
-        .unwrap()
-        .to_string()
-        .split("\n")
-        .enumerate()
-        .map(|(i, s)| format!("{} {}", i + 1, s))
-        .collect::<Vec<String>>()
-        .join("\n")
+            .unwrap()
+            .to_string()
+            .split("\n")
+            .enumerate()
+            .map(|(i, s)| format!("{} {}", i + 1, s))
+            .collect::<Vec<String>>()
+            .join("\n"),
     );
 }

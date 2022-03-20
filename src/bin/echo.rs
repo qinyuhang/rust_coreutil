@@ -1,7 +1,7 @@
 #[allow(dead_code)]
 type TestResult = std::result::Result<(), Box<dyn std::error::Error>>;
 
-use clap::{Arg, Command, ArgMatches};
+use clap::{Arg, ArgMatches, Command};
 fn main() {
     let c = Command::new("echo")
         .version("0.1.0")

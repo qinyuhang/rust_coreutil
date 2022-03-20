@@ -1,5 +1,5 @@
+use assert_cmd::Command as A_CMD;
 use std::process::Command;
-use assert_cmd::{Command as A_CMD};
 
 #[test]
 fn test_canary() {
@@ -11,7 +11,6 @@ fn test_ls() {
     let mut c = Command::new("ls");
     assert!(c.output().is_ok());
 }
-
 
 #[test]
 fn test_true() {

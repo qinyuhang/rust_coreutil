@@ -13,7 +13,21 @@ fn main() {
     let app = Command::new("cat")
         .about("Rust cat commandline app")
         .author("qinyuhangxiaoxiang@gmail.com")
-        .arg(Arg::new("line number").short('n').takes_value(false))
+        .arg(Arg::new("line number")
+            .short('n')
+            .takes_value(false)
+            .help("Number the output lines, starting at 1.")
+        )
+        .arg(
+            Arg::new("not empty line number")
+                .short('b')
+                .takes_value(false)
+                .help("Number the non-blank output lines, starting at 1.")
+        )
+        .arg(
+            Arg::new("Display non-printing characters")
+                .short('e')
+                .help("Display non-printing characters (see the -v option), and display a dollar sign (‘$’) at the end of each line."))
         .arg(
             Arg::new("file name")
                 .takes_value(true)
