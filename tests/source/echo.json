@@ -1,0 +1,28 @@
+[
+    {
+        "args": [
+            "-n",
+            "Hello there"
+        ],
+        "output": "Hello there"
+    },
+    {
+        "args": [
+            "-n",
+            "Hello", "there"
+        ],
+        "output": "Hello there"
+    },
+    {
+        "args": [
+            "Hello there"
+        ],
+        "output": "Hello there\n"
+    },
+    {
+        "args": [
+            "Hello", "there"
+        ],
+        "output": "Hello there\n"
+    }
+]
