@@ -31,9 +31,14 @@ fn main() {
         };
         if m.is_present("line number") {
             // if -b add line number to x
-            x.split("\n").enumerate().for_each(|(line, content)| {
-                println!("{} {}", line + 1, content);
-            });
+            print!(
+                "{}",
+                x.split("\n")
+                    .enumerate()
+                    .map(|(line, content)| { format!("{} {}", line + 1, content) })
+                    .collect::<Vec<String>>()
+                    .join("\n")
+            );
         } else {
             print!("{}", x);
         };
