@@ -1,3 +1,5 @@
+type TestResult = std::result::Result<(), Box<dyn std::error::Error>>;
+
 use clap::{Arg, Command, ArgMatches};
 fn main() {
     let c = Command::new("echo")
