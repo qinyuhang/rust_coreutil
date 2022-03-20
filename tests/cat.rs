@@ -1,6 +1,6 @@
 use assert_cmd::Command as A_CMD;
 
-const cli_rs_content: &str = r#"use std::process::Command;
+const CLI_RS_CONTENT: &str = r#"use std::process::Command;
 use assert_cmd::{Command as A_CMD};
 
 #[test]
@@ -33,7 +33,7 @@ fn test_hello() {
     c.assert().success().stdout("Hello world!\n");
 }"#;
 
-const echo_rs_content: &str = r#"extern crate assert_cmd;
+const ECHO_RS_CONTENT: &str = r#"extern crate assert_cmd;
 extern crate serde;
 extern crate serde_json;
 
@@ -87,17 +87,26 @@ fn test_cat_empty() {
 #[test]
 fn test_cat_file_not_exist() {
     let mut c = A_CMD::cargo_bin("cat").unwrap();
-    c.arg("./not_exist").assert().success().stdout("cat: ./not_exist: No such file or directory (os error 2)");
+    c.arg("./not_exist")
+        .assert()
+        .success()
+        .stdout("cat: ./not_exist: No such file or directory (os error 2)");
 }
 
 #[test]
 fn test_cat_file_exist() {
     let mut c = A_CMD::cargo_bin("cat").unwrap();
-    c.arg("./tests/cli.rs").assert().success().stdout(cli_rs_content);
+    c.arg("./tests/cli.rs")
+        .assert()
+        .success()
+        .stdout(CLI_RS_CONTENT);
 }
 
 #[test]
 fn test_cat_multiple_files() {
     let mut c = A_CMD::cargo_bin("cat").unwrap();
-    c.args(&["./tests/cli.rs", "./tests/echo.rs"]).assert().success().stdout(cli_rs_content.to_string() + echo_rs_content);
+    c.args(&["./tests/cli.rs", "./tests/echo.rs"])
+        .assert()
+        .success()
+        .stdout(CLI_RS_CONTENT.to_string() + ECHO_RS_CONTENT);
 }
