@@ -43,7 +43,7 @@ fn test_cat_multiple_files() {
 #[test]
 fn test_cat_b_option() {
     let mut c = A_CMD::cargo_bin("cat").unwrap();
-    c.args(&["./tests/cli.rs", "-b"])
+    c.args(&["./tests/cli.rs", "-n"])
     .assert()
     .success()
     .stdout(

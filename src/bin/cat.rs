@@ -4,6 +4,7 @@
 /// [x] 2. accpet multiple file
 ///
 /// -b Number the non-blank output lines, starting at 1.
+/// -s combine multiple empty line into one empty line.
 extern crate clap;
 use clap::{Arg, Command};
 
@@ -12,7 +13,7 @@ fn main() {
     let app = Command::new("cat")
         .about("Rust cat commandline app")
         .author("qinyuhangxiaoxiang@gmail.com")
-        .arg(Arg::new("line number").short('b').takes_value(false))
+        .arg(Arg::new("line number").short('n').takes_value(false))
         .arg(
             Arg::new("file name")
                 .takes_value(true)
@@ -30,7 +31,7 @@ fn main() {
             Err(e) => format!("cat: {}: {}", f, e.to_string()),
         };
         if m.is_present("line number") {
-            // if -b add line number to x
+            // if -n add line number to x
             print!(
                 "{}",
                 x.split("\n")
