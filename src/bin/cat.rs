@@ -7,8 +7,7 @@
 /// -s combine multiple empty line into one empty line.
 extern crate clap;
 extern crate rust_coreutil;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead};
 
 use clap::{Arg, Command};
 use rust_coreutil::open;

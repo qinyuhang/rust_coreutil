@@ -59,7 +59,11 @@ fn get_config() -> AppConfig {
 fn main() {
     let config = get_config();
     // println!("{:?}", config);
-    config.files.iter().for_each(|f| {
+    let f_len = config.files.len();
+    config.files.iter().enumerate().for_each(|(idx, f)| {
+        if f_len > 1 {
+            println!("==> {} <==", f);
+        }
         println!(
             "{}",
             std::fs::read_to_string(f)
@@ -69,5 +73,8 @@ fn main() {
                 .collect::<Vec<&str>>()
                 .join("\n")
         );
+        if f_len > 1 && idx != f_len - 1 {
+            println!();
+        }
     })
 }

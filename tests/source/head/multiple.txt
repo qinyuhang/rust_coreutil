@@ -1,0 +1,23 @@
+==> ./tests/cli.rs <==
+use assert_cmd::Command as A_CMD;
+use std::process::Command;
+
+#[test]
+fn test_canary() {
+    assert!(true);
+}
+
+#[test]
+fn test_ls() {
+
+==> ./tests/echo.rs <==
+extern crate assert_cmd;
+extern crate serde;
+extern crate serde_json;
+
+use assert_cmd::Command as A_CMD;
+use serde::{Deserialize, Serialize};
+
+#[test]
+fn test_echo() {
+    let mut c = A_CMD::cargo_bin("echo").unwrap();

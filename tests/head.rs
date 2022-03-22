@@ -19,4 +19,10 @@ fn test_regular_file_with_n_switch() {
 }
 
 #[test]
-fn test_head_multiple_files() {}
+fn test_head_multiple_files() {
+    let mut c = A_CMD::cargo_bin("head").unwrap();
+    c.args(&["./tests/cli.rs", "./tests/echo.rs"])
+        .assert()
+        .success()
+        .stdout(std::fs::read_to_string("./tests/source/head/multiple.txt").unwrap());
+}
