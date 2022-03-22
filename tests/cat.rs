@@ -12,7 +12,7 @@ fn test_cat_file_not_exist() {
     c.arg("./not_exist")
         .assert()
         .success()
-        .stdout("cat: ./not_exist: No such file or directory (os error 2)");
+        .stderr("cat: ./not_exist: No such file or directory (os error 2)");
 }
 
 #[test]
@@ -40,17 +40,13 @@ fn test_cat_multiple_files() {
         );
 }
 
+// bug fix last line
 #[test]
 fn test_cat_b_option() {
     let mut c = A_CMD::cargo_bin("cat").unwrap();
     c.args(&["./tests/cli.rs", "-n"]).assert().success().stdout(
-        std::fs::read_to_string("./tests/cli.rs")
+        std::fs::read_to_string("./tests/source/cli.n.txt")
             .unwrap()
             .to_string()
-            .split("\n")
-            .enumerate()
-            .map(|(i, s)| format!("{} {}", i + 1, s))
-            .collect::<Vec<String>>()
-            .join("\n"),
     );
 }

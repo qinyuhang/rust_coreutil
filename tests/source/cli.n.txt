@@ -1,0 +1,31 @@
+     1	use assert_cmd::Command as A_CMD;
+     2	use std::process::Command;
+     3	
+     4	#[test]
+     5	fn test_canary() {
+     6	    assert!(true);
+     7	}
+     8	
+     9	#[test]
+    10	fn test_ls() {
+    11	    let mut c = Command::new("ls");
+    12	    assert!(c.output().is_ok());
+    13	}
+    14	
+    15	#[test]
+    16	fn test_true() {
+    17	    let mut c = Command::new("./target/debug/true");
+    18	    assert!(c.output().is_ok());
+    19	}
+    20	
+    21	#[test]
+    22	fn test_false() {
+    23	    let mut c = A_CMD::cargo_bin("false").unwrap();
+    24	    c.assert().failure();
+    25	}
+    26	
+    27	#[test]
+    28	fn test_hello() {
+    29	    let mut c = A_CMD::cargo_bin("hello").unwrap();
+    30	    c.assert().success().stdout("Hello world!\n");
+    31	}
