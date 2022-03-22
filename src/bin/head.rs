@@ -4,6 +4,7 @@ extern crate rust_coreutil;
 
 use clap::{Arg, Command};
 use rust_coreutil::open;
+use std::io::BufRead;
 
 #[derive(Debug)]
 struct AppConfig {
@@ -66,11 +67,14 @@ fn main() {
         }
         println!(
             "{}",
-            std::fs::read_to_string(f)
+            open(f)
+            // std::fs::read_to_string(f)
                 .unwrap()
                 .lines()
                 .take(config.count)
-                .collect::<Vec<&str>>()
+                .filter(|line| line.is_ok())
+                .map(|line| line.unwrap())
+                .collect::<Vec<String>>()
                 .join("\n")
         );
         if f_len > 1 && idx != f_len - 1 {
