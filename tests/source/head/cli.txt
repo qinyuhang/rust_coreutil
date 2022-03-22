@@ -1,0 +1,10 @@
+use assert_cmd::Command as A_CMD;
+use std::process::Command;
+
+#[test]
+fn test_canary() {
+    assert!(true);
+}
+
+#[test]
+fn test_ls() {
