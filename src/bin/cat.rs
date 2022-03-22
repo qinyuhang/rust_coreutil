@@ -6,21 +6,12 @@
 /// -b Number the non-blank output lines, starting at 1.
 /// -s combine multiple empty line into one empty line.
 extern crate clap;
+extern crate rust_coreutil;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use clap::{Arg, Command};
-
-/// 使用一个open函数来包裹不同的情况，最后都返回一个BufRead类型的，
-/// 这个需要对读取器这个trait有了解才可以写出来，这个写法有点 rust-style
-/// 要知道 stdin 和 File 都实现了 read？trait？TODO 回去翻一下书
-#[allow(dead_code)]
-fn open(filename: &str) -> std::result::Result<Box<dyn BufRead>, Box<dyn std::error::Error>> {
-    match filename {
-        "-" => Ok(Box::new(BufReader::new(std::io::stdin()))),
-        _ => Ok(Box::new(BufReader::new(File::open(filename)?))),
-    }
-}
+use rust_coreutil::open;
 
 fn main() {
     // TODO if cat take no arguments, it became an echor
