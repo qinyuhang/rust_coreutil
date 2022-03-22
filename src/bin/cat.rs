@@ -33,7 +33,7 @@ fn main() {
             .help("Number the output lines, starting at 1.")
         )
         .arg(
-            Arg::new("not empty line number")
+            Arg::new("not blank line number")
                 .short('b')
                 .takes_value(false)
                 .help("Number the non-blank output lines, starting at 1.")
@@ -57,12 +57,21 @@ fn main() {
             Err(err) => {eprint!("cat: {}: {}", f, err)},
             Ok(fi) => {
                 // this code works fine with stdin
+                let mut last_line_num = 0;
                 fi.lines().into_iter().enumerate()
                 .for_each(|(idx, fic)| {
-                    if !m.is_present("line number") {
-                        println!("{}", fic.unwrap());
+                    let line = fic.unwrap();
+                    if m.is_present("line number") {
+                        println!("{:>6}\t{}", idx + 1, line);
+                    } else if m.is_present("not blank line number") {
+                        if !line.is_empty() {
+                            last_line_num += 1;
+                            println!("{:>6}\t{}", last_line_num, line)
+                        } else {
+                            println!();
+                        }
                     } else {
-                        println!("{:>6}\t{}", idx + 1, fic.unwrap());
+                        println!("{}", line);
                     }
                 });
                 

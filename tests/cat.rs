@@ -40,12 +40,21 @@ fn test_cat_multiple_files() {
         );
 }
 
-// bug fix last line
 #[test]
-fn test_cat_b_option() {
+fn test_cat_n_option() {
     let mut c = A_CMD::cargo_bin("cat").unwrap();
     c.args(&["./tests/cli.rs", "-n"]).assert().success().stdout(
         std::fs::read_to_string("./tests/source/cli.n.txt")
+            .unwrap()
+            .to_string()
+    );
+}
+
+#[test]
+fn test_cat_b_option() {
+    let mut c = A_CMD::cargo_bin("cat").unwrap();
+    c.args(&["./tests/cli.rs", "-b"]).assert().success().stdout(
+        std::fs::read_to_string("./tests/source/cli.b.txt")
             .unwrap()
             .to_string()
     );
