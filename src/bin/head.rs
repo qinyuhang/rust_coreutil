@@ -5,6 +5,7 @@ extern crate rust_coreutil;
 use clap::{Arg, Command};
 use rust_coreutil::open;
 use std::io::BufRead;
+use std::io::Read;
 
 #[derive(Debug)]
 struct AppConfig {
@@ -70,18 +71,25 @@ fn main() {
             Ok(f) => f,
             Err(e) => { eprintln!("head: {}: {}", f, e.to_string()); std::process::exit(1); }
         };
-        println!(
-            "{}",
-            fi
-                .lines()
-                .take(config.count)
-                .filter(|line| line.is_ok())
-                .map(|line| line.unwrap())
-                .collect::<Vec<String>>()
-                .join("\n")
-        );
-        if f_len > 1 && idx != f_len - 1 {
-            println!();
+        if let Some(bytes) = config.bytes {
+            let mut handle = fi.take(bytes as u64);
+            let mut buf = vec![0; bytes];
+            let n = handle.read(&mut buf).unwrap();
+            print!("{}", String::from_utf8_lossy(&buf[..n]));
+        } else {
+            println!(
+                "{}",
+                fi
+                    .lines()
+                    .take(config.count)
+                    .filter(|line| line.is_ok())
+                    .map(|line| line.unwrap())
+                    .collect::<Vec<String>>()
+                    .join("\n")
+            );
+            if f_len > 1 && idx != f_len - 1 {
+                println!();
+            }
         }
     })
 }

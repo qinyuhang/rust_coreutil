@@ -35,3 +35,12 @@ fn test_not_exist_file() {
         .failure()
         .stderr("head: ./not_exist.file: No such file or directory (os error 2)\n");
 }
+
+#[test]
+fn test_head_file_with_b_switch() {
+    let mut c = A_CMD::cargo_bin("head").unwrap();
+    c.args(&["-c", "5", "./tests/cli.rs"])
+        .assert()
+        .success()
+        .stdout(std::fs::read_to_string("./tests/source/head/cli.b.5.txt").unwrap());
+}
