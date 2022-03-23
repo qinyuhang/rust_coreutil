@@ -65,11 +65,14 @@ fn main() {
         if f_len > 1 {
             println!("==> {} <==", f);
         }
+        // TODO handle -c 
+        let fi = match open(f) {
+            Ok(f) => f,
+            Err(e) => { eprintln!("head: {}: {}", f, e.to_string()); std::process::exit(1); }
+        };
         println!(
             "{}",
-            open(f)
-            // std::fs::read_to_string(f)
-                .unwrap()
+            fi
                 .lines()
                 .take(config.count)
                 .filter(|line| line.is_ok())

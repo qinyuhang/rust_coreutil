@@ -26,3 +26,12 @@ fn test_head_multiple_files() {
         .success()
         .stdout(std::fs::read_to_string("./tests/source/head/multiple.txt").unwrap());
 }
+
+#[test]
+fn test_not_exist_file() {
+    let mut c = A_CMD::cargo_bin("head").unwrap();
+    c.args(&["./not_exist.file"])
+        .assert()
+        .failure()
+        .stderr("head: ./not_exist.file: No such file or directory (os error 2)\n");
+}
