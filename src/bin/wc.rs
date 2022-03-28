@@ -105,10 +105,26 @@ fn main() {
         };
 
         if let Ok(f_info) = count(fi) {
-            println!(
-                "{:>8}{:>8}{:>8} {}",
-                f_info.num_lines, f_info.num_words, f_info.num_bytes, f
-            )
+            if config.bytes {
+                println!("{:>8} {}", f_info.num_bytes, f);
+            }
+            else if config.lines {
+                println!("{:>8} {}", f_info.num_lines, f);
+            }
+            else if config.chars {
+                println!("{:>8} {}", f_info.num_chars, f);
+            }
+            else if config.words {
+                println!("{:>8} {}", f_info.num_words, f);
+            }
+            else {
+                // has none options
+                println!(
+                    "{:>8}{:>8}{:>8} {}",
+                    f_info.num_lines, f_info.num_words, f_info.num_bytes, f
+                );
+            }
+            // todo handle other options
         }
         // println!("{:?}", f_info.unwrap());
         // if let Some(bytes) = config.bytes {
