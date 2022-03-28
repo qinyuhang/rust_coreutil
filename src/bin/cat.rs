@@ -7,7 +7,7 @@
 /// -s combine multiple empty line into one empty line.
 extern crate clap;
 extern crate rust_coreutil;
-use std::io::{BufRead};
+use std::io::BufRead;
 
 use clap::{Arg, Command};
 use rust_coreutil::open;
@@ -41,15 +41,18 @@ fn main() {
 
     let m = app.get_matches();
 
-    let file_names = m.values_of_lossy("file name").unwrap_or(vec!["-".to_string()]);
+    let file_names = m
+        .values_of_lossy("file name")
+        .unwrap_or(vec!["-".to_string()]);
     file_names.iter().for_each(|f| {
         match open(f) {
-            Err(err) => {eprint!("cat: {}: {}", f, err)},
+            Err(err) => {
+                eprint!("cat: {}: {}", f, err)
+            }
             Ok(fi) => {
                 // this code works fine with stdin
                 let mut last_line_num = 0;
-                fi.lines().into_iter().enumerate()
-                .for_each(|(idx, fic)| {
+                fi.lines().into_iter().enumerate().for_each(|(idx, fic)| {
                     let line = fic.unwrap();
                     if m.is_present("line number") {
                         println!("{:>6}\t{}", idx + 1, line);
@@ -64,12 +67,12 @@ fn main() {
                         println!("{}", line);
                     }
                 });
-                
+
                 // let x = match std::fs::read_to_string(*fi) {
                 //     Ok(r) => r,
                 //     Err(e) => format!("cat: {}: {}", f, e.to_string()),
                 // };
-            },
+            }
         };
         // todo ? __dirname ?
         // let x = match std::fs::read_to_string(f) {
