@@ -118,7 +118,7 @@ fn main() {
             //     println!("==> {} <==", f);
             // }
             // TODO handle -c
-            let mut fi = match open(f) {
+            let fi = match open(f) {
                 Ok(f) => f,
                 Err(e) => {
                     eprintln!("head: {}: {}", f, e.to_string());
