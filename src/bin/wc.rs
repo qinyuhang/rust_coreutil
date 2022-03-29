@@ -10,7 +10,7 @@
 /// When an option is specified, wc only reports the information requested by that option.  The order of output always takes the form of line, word, byte, and file name.
 /// The default action is equivalent to specifying the -c, -l and -w options.
 extern crate clap;
-use clap::{Arg, Command};
+use clap::{Arg, Command, App};
 use rust_coreutil::open;
 use std::io::prelude::*;
 
@@ -52,7 +52,7 @@ fn make_app() -> AppConfig {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 struct FileInfo {
     num_lines: i32,
     num_chars: i32,
@@ -84,68 +84,62 @@ fn count(mut file: impl BufRead) -> std::io::Result<FileInfo> {
     })
 }
 
+fn print_format(f_info: &FileInfo, f: &String, config: &AppConfig) {
+    if config.bytes {
+        println!("{:>8} {}", f_info.num_bytes, f);
+    } else if config.lines {
+        println!("{:>8} {}", f_info.num_lines, f);
+    } else if config.chars {
+        println!("{:>8} {}", f_info.num_chars, f);
+    } else if config.words {
+        println!("{:>8} {}", f_info.num_words, f);
+    } else {
+        // has none options
+        println!(
+            "{:>8}{:>8}{:>8} {}",
+            f_info.num_lines, f_info.num_words, f_info.num_bytes, f
+        );
+    }
+}
+
 fn main() {
     let config = make_app();
     // println!("{:?}", config);
 
-    // let f_len = config.files.len();
+    let f_len = config.files.len();
 
     // move all the count to a single fn
-    config.files.iter().for_each(|f| {
-        // if f_len > 1 {
-        //     println!("==> {} <==", f);
-        // }
-        // TODO handle -c
-        let mut fi = match open(f) {
-            Ok(f) => f,
-            Err(e) => {
-                eprintln!("head: {}: {}", f, e.to_string());
-                std::process::exit(1);
-            }
-        };
+    // let mut total_file_info = FileInfo::default();
+    let total_result = config
+        .files
+        .iter()
+        .map(|f| {
+            // if f_len > 1 {
+            //     println!("==> {} <==", f);
+            // }
+            // TODO handle -c
+            let mut fi = match open(f) {
+                Ok(f) => f,
+                Err(e) => {
+                    eprintln!("head: {}: {}", f, e.to_string());
+                    std::process::exit(1);
+                }
+            };
 
-        if let Ok(f_info) = count(fi) {
-            if config.bytes {
-                println!("{:>8} {}", f_info.num_bytes, f);
+            if let Ok(f_info) = count(fi) {
+                print_format(&f_info, &f, &config);
+                f_info.clone()
+            } else {
+                FileInfo::default()
             }
-            else if config.lines {
-                println!("{:>8} {}", f_info.num_lines, f);
-            }
-            else if config.chars {
-                println!("{:>8} {}", f_info.num_chars, f);
-            }
-            else if config.words {
-                println!("{:>8} {}", f_info.num_words, f);
-            }
-            else {
-                // has none options
-                println!(
-                    "{:>8}{:>8}{:>8} {}",
-                    f_info.num_lines, f_info.num_words, f_info.num_bytes, f
-                );
-            }
-            // todo handle other options
-        }
-        // println!("{:?}", f_info.unwrap());
-        // if let Some(bytes) = config.bytes {
-        //     let mut handle = fi.take(bytes as u64);
-        //     let mut buf = vec![0; bytes];
-        //     let n = handle.read(&mut buf).unwrap();
-        //     print!("{}", String::from_utf8_lossy(&buf[..n]));
-        // } else {
-        //     println!(
-        //         "{}",
-        //         fi
-        //             .lines()
-        //             .take(config.count)
-        //             .filter(|line| line.is_ok())
-        //             .map(|line| line.unwrap())
-        //             .collect::<Vec<String>>()
-        //             .join("\n")
-        //     );
-        //     if f_len > 1 && idx != f_len - 1 {
-        //         println!();
-        //     }
-        // }
-    })
+        })
+        .fold(FileInfo::default(), |a, b| FileInfo {
+            num_lines: a.num_lines + b.num_lines,
+            num_chars: a.num_chars + b.num_chars,
+            num_bytes: a.num_bytes + b.num_bytes,
+            num_words: a.num_words + b.num_words,
+        });
+    if f_len > 1 {
+        print_format(&total_result, &"total".to_string(), &config);
+    }
 }
