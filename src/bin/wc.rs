@@ -10,7 +10,7 @@
 /// When an option is specified, wc only reports the information requested by that option.  The order of output always takes the form of line, word, byte, and file name.
 /// The default action is equivalent to specifying the -c, -l and -w options.
 extern crate clap;
-use clap::{Arg, Command, App};
+use clap::{Arg, Command};
 use rust_coreutil::open;
 use std::io::prelude::*;
 

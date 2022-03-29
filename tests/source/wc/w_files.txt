@@ -1,0 +1,3 @@
+      57 ./tests/cli.rs
+     107 ./tests/cat.rs
+     164 total
