@@ -20,3 +20,12 @@ fn read_me_md_c() {
         .success()
         .stdout(std::fs::read_to_string("./tests/source/uniq/readme_c.txt").unwrap());
 }
+
+#[test]
+fn d_op() {
+    let mut c = A_CMD::cargo_bin("uniq").unwrap();
+    c.args(&["-d", "./tests/source/uniq/d_source.txt"])
+        .assert()
+        .success()
+        .stdout(std::fs::read_to_string("./tests/source/uniq/d_output.txt").unwrap());
+}

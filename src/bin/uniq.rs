@@ -64,7 +64,13 @@ struct AppConfig {
 fn format_print(config: &AppConfig, line_data: (&String, &u32)) {
     if config.count {
         print!("{:>4} {}", line_data.1, line_data.0);
-    } else {
+    }
+    else if config.repeated {
+        if *line_data.1 > 1 {
+            print!("{}", line_data.0);
+        }
+    }
+    else {
         print!("{}", line_data.0);
     }
 }
