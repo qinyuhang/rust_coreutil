@@ -12,6 +12,7 @@ enum AllRepeated {
     Separate,
 }
 
+/// TODO mark conflict
 #[derive(Debug, Parser)]
 #[clap(name = "uniq")]
 struct AppConfig {
@@ -56,21 +57,24 @@ struct AppConfig {
     #[clap(short = 'u', long = "unique")]
     unique: bool,
 
-    /// file name
+    /// input file
     #[clap(default_value = "-")]
-    files: Vec<String>,
+    input_file: String,
+
+    /// the output file
+    /// if not exist, create one
+    #[clap(default_value = "-")]
+    output_file: String,
 }
 
 fn format_print(config: &AppConfig, line_data: (&String, &u32)) {
     if config.count {
         print!("{:>4} {}", line_data.1, line_data.0);
-    }
-    else if config.repeated {
+    } else if config.repeated {
         if *line_data.1 > 1 {
             print!("{}", line_data.0);
         }
-    }
-    else {
+    } else {
         print!("{}", line_data.0);
     }
 }
@@ -81,38 +85,37 @@ fn make_uniqu_collection() -> std::collections::HashMap<String, u32> {
 fn main() {
     let config = AppConfig::parse();
 
-    config.files.iter().for_each(|f| {
-        let mut collection = make_uniqu_collection();
-        let mut orderd_colloection = vec![];
-        // use hashMap to store the lines and insert into collection
-        let mut f = open(f).unwrap();
-        let mut line = String::new();
-        loop {
-            let size = f.read_line(&mut line).unwrap();
-            if size == 0 {
-                break;
-            }
-            if line == "\n".to_string() {
-                collection.insert(line.clone(), 1);
-                orderd_colloection.push(line.clone());
-                line.clear();
-                continue;
-            }
-            if let Some(l) = collection.get_mut(&line) {
-                *l += 1;
-                line.clear();
-                continue;
-            } else {
-                collection.insert(line.clone(), 1);
-                orderd_colloection.push(line.clone());
-            }
-            line.clear();
+    let f = config.input_file.as_ref();
+    let mut collection = make_uniqu_collection();
+    let mut orderd_colloection = vec![];
+    // use hashMap to store the lines and insert into collection
+    let mut f = open(f).unwrap();
+    let mut line = String::new();
+    loop {
+        let size = f.read_line(&mut line).unwrap();
+        if size == 0 {
+            break;
         }
+        if line == "\n".to_string() {
+            collection.insert(line.clone(), 1);
+            orderd_colloection.push(line.clone());
+            line.clear();
+            continue;
+        }
+        if let Some(l) = collection.get_mut(&line) {
+            *l += 1;
+            line.clear();
+            continue;
+        } else {
+            collection.insert(line.clone(), 1);
+            orderd_colloection.push(line.clone());
+        }
+        line.clear();
+    }
 
-        // TODO hasMap is unorderd! bug fixme
-        orderd_colloection.iter().for_each(|line_data| {
-            format_print(&config, (&line_data, collection.get(line_data).unwrap()));
-        });
+    // TODO hasMap is unorderd! bug fixme
+    orderd_colloection.iter().for_each(|line_data| {
+        format_print(&config, (&line_data, collection.get(line_data).unwrap()));
     });
 
     // println!("{:?}", config);
