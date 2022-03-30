@@ -11,3 +11,12 @@ fn read_me_md() {
         .success()
         .stdout(std::fs::read_to_string("./readme.md").unwrap());
 }
+
+#[test]
+fn read_me_md_c() {
+    let mut c = A_CMD::cargo_bin("uniq").unwrap();
+    c.args(&["-c", "./readme.md"])
+        .assert()
+        .success()
+        .stdout(std::fs::read_to_string("./tests/source/uniq/readme_c.txt").unwrap());
+}
