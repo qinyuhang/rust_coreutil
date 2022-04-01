@@ -67,15 +67,15 @@ struct AppConfig {
     output_file: String,
 }
 
-fn format_print(config: &AppConfig, line_data: (&String, &u32)) {
+fn format_output(config: &AppConfig, line_data: (&String, &u32), output: &mut Box<dyn Write>) {
     if config.count {
-        print!("{:>4} {}", line_data.1, line_data.0);
+        output.write(format!("{:>4} {}", line_data.1, line_data.0).as_bytes());
     } else if config.repeated {
         if *line_data.1 > 1 {
-            print!("{}", line_data.0);
+            output.write(format!("{}", line_data.0).as_bytes());
         }
     } else {
-        print!("{}", line_data.0);
+        output.write(format!("{}", line_data.0).as_bytes());
     }
 }
 /// return a hashMap<String, i8>
@@ -130,7 +130,7 @@ fn main() {
     }
 
     orderd_colloection.iter().for_each(|line_data| {
-        format_print(&config, (&line_data, collection.get(line_data).unwrap()));
+        format_output(&config, (&line_data, collection.get(line_data).unwrap()), &mut out_file);
     });
 
     // println!("{:?}", config);
