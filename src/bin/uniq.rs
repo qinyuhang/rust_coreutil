@@ -87,12 +87,18 @@ fn main() {
 
     let f = config.input_file.as_ref();
     let mut collection = make_uniqu_collection();
+    let mut upper_collection = make_uniqu_collection();
     let mut orderd_colloection = vec![];
     // use hashMap to store the lines and insert into collection
     let mut f = open(f).unwrap();
+    let mut out_file: Box<dyn Write> = match config.output_file.as_str() {
+        "-" => Box::new(std::io::stdout()),
+        file_name => Box::new(std::fs::File::create(file_name).unwrap()),
+    };
     let mut line = String::new();
     loop {
         let size = f.read_line(&mut line).unwrap();
+        let mut line_upper = line.to_uppercase();
         if size == 0 {
             break;
         }
@@ -100,6 +106,7 @@ fn main() {
             collection.insert(line.clone(), 1);
             orderd_colloection.push(line.clone());
             line.clear();
+            line_upper.clear();
             continue;
         }
         if let Some(l) = collection.get_mut(&line) {
@@ -107,13 +114,21 @@ fn main() {
             line.clear();
             continue;
         } else {
+            if config.ignore_case {
+                if let Some(_) = upper_collection.get(&line_upper) {
+                    line_upper.clear();
+                    continue;
+                } else {
+                    upper_collection.insert(line_upper.clone(), 1);
+                }
+            }
             collection.insert(line.clone(), 1);
             orderd_colloection.push(line.clone());
         }
         line.clear();
+        line_upper.clear();
     }
 
-    // TODO hasMap is unorderd! bug fixme
     orderd_colloection.iter().for_each(|line_data| {
         format_print(&config, (&line_data, collection.get(line_data).unwrap()));
     });

@@ -29,3 +29,12 @@ fn d_op() {
         .success()
         .stdout(std::fs::read_to_string("./tests/source/uniq/d_output.txt").unwrap());
 }
+
+#[test]
+fn i_op() {
+    let mut c = A_CMD::cargo_bin("uniq").unwrap();
+    c.args(&["-i", "./tests/source/uniq/i_source.txt"])
+        .assert()
+        .success()
+        .stdout(std::fs::read_to_string("./tests/source/uniq/i_output.txt").unwrap());
+}
